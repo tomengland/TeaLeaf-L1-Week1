@@ -1,5 +1,5 @@
-require 'pry'
 puts 'Play Paper Rock Scissors!'
+#Helper methods
 def play
   begin
     puts 'Choose one: (P/R/S)'
@@ -27,6 +27,7 @@ def play_again_check()
     puts "Thanks for playing!"
   end
 end
+#Loop of game
 begin
   answers_array = play
   case answers_array
