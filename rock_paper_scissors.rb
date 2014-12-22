@@ -28,6 +28,7 @@ def play_again_check()
   end
 end
 #Loop of game
+# 0 = Paper, 1 = Rock, 2 = Scissors
 begin
   answers_array = play
   case answers_array
