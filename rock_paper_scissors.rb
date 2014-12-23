@@ -26,11 +26,14 @@ end
 #Loop of game
 # 0 = Paper, 1 = Rock, 2 = Scissors
 begin
+
   begin
     puts 'Choose one: (P/R/S)'
     choice = gets.chomp.downcase
   end until choice == 'p' || choice == 'r' || choice == 's'
+
   game_choices = return_arr_game_choices(choice)
+
   case game_choices
   when [0, 0]
     puts "You picked Paper and computer picked Paper"
@@ -62,6 +65,7 @@ begin
   else 
     puts "A combination/possibility was not thought of, contact developer immediately!"
   end
+  
 end while play_again_check == 'y'
 
 puts "Thanks for playing!"
