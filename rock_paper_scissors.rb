@@ -1,4 +1,5 @@
 puts 'Play Paper Rock Scissors!'
+
 #Helper methods
 def return_arr_game_choices(player_choice)
   if player_choice == 'p'
@@ -29,10 +30,10 @@ begin
 
   begin
     puts 'Choose one: (P/R/S)'
-    choice = gets.chomp.downcase
-  end until choice == 'p' || choice == 'r' || choice == 's'
+    player_choice = gets.chomp.downcase
+  end until player_choice == 'p' || player_choice == 'r' || player_choice == 's'
 
-  game_choices = return_arr_game_choices(choice)
+  game_choices = return_arr_game_choices(player_choice)
 
   case game_choices
   when [0, 0]
@@ -65,7 +66,7 @@ begin
   else 
     puts "A combination/possibility was not thought of, contact developer immediately!"
   end
-  
+
 end while play_again_check == 'y'
 
 puts "Thanks for playing!"
