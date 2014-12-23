@@ -19,11 +19,7 @@ def play_again_check
     puts "Play again? (Y/N)"
     answer = gets.chomp.downcase
   end until answer == 'y' || answer == 'n'
-  if answer == 'y'
-    'y'
-  elsif answer == 'n'
-    puts "Thanks for playing!"
-  end
+  answer
 end
 
 
@@ -67,6 +63,8 @@ begin
     puts "A combination/possibility was not thought of, contact developer immediately!"
   end
 end while play_again_check == 'y'
+
+puts "Thanks for playing!"
 
 
 
