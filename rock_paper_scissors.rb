@@ -10,8 +10,10 @@ def return_arr_game_choices(player_choice)
   end
   # generate a random number ranging from 0,1,2
   computer_choice_number = rand(3)
-  return [player_choice, computer_choice_number]
+  [player_choice, computer_choice_number]
 end
+
+
 def play_again_check
   begin
     puts "Play again? (Y/N)"
@@ -23,6 +25,8 @@ def play_again_check
     puts "Thanks for playing!"
   end
 end
+
+
 #Loop of game
 # 0 = Paper, 1 = Rock, 2 = Scissors
 begin
