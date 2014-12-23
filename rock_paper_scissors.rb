@@ -1,22 +1,18 @@
 puts 'Play Paper Rock Scissors!'
 #Helper methods
-def play
-  begin
-    puts 'Choose one: (P/R/S)'
-    choice = gets.chomp.downcase
-  end until choice == 'p' || choice == 'r' || choice == 's'
-  if choice == 'p'
-    choice = 0
-  elsif choice == 'r'
-    choice = 1
-  elsif choice == 's'
-    choice = 2
+def return_arr_game_choices(player_choice)
+  if player_choice == 'p'
+    player_choice = 0
+  elsif player_choice == 'r'
+    player_choice = 1
+  elsif player_choice == 's'
+    player_choice = 2
   end
   # generate a random number ranging from 0,1,2
   computer_choice_number = rand(3)
-  return [choice, computer_choice_number]
+  return [player_choice, computer_choice_number]
 end
-def play_again_check()
+def play_again_check
   begin
     puts "Play again? (Y/N)"
     answer = gets.chomp.downcase
@@ -30,8 +26,12 @@ end
 #Loop of game
 # 0 = Paper, 1 = Rock, 2 = Scissors
 begin
-  answers_array = play
-  case answers_array
+  begin
+    puts 'Choose one: (P/R/S)'
+    choice = gets.chomp.downcase
+  end until choice == 'p' || choice == 'r' || choice == 's'
+  game_choices = return_arr_game_choices(choice)
+  case game_choices
   when [0, 0]
     puts "You picked Paper and computer picked Paper"
     puts "It's a tie"
