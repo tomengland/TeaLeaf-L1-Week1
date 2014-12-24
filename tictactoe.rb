@@ -15,7 +15,7 @@
 #6 else no winner it's tie, ask do you want to play again. 
 #loop until they do not want to play again. 
 
-def draw_board board
+def draw_board(board)
   system "clear" or system "cls"
   puts " #{board[1]} | #{board[2]} | #{board[3]} "
   puts "---+---+---"
@@ -24,7 +24,7 @@ def draw_board board
   puts " #{board[7]} | #{board[8]} | #{board[9]} "
 end
 
-def player_picks_square board
+def player_picks_square(board)
   begin
     puts 'Pick a square (1 - 9):'
     position = gets.chomp
@@ -32,7 +32,7 @@ def player_picks_square board
   position.to_i
 end
 
-def is_there_a_winner?
+def is_there_a_winner?(board)
   # check if there is a winner
   # 1 2 3
   # 4 5 6
@@ -49,16 +49,15 @@ def is_there_a_winner?
 
 end
 
-def ai_picks_square board
+def ai_picks_square(board)
   # have ai pick a square
-  #.has_value?("x")
   board_with_empty_slots = board.select do |key, value|
     value == ' ' 
   end
   board_with_empty_slots.keys.sample
 end
 
-def all_squares_taken? board
+def all_squares_taken?(board)
   #all squares taken?
   !board.has_value?(' ')
 end
@@ -74,16 +73,22 @@ def play_again_check?
     true
   end
 end
-
+## GAME LOGIC BEGIN
 begin
-  board = { 1 => ' ', 2 => ' ', 3 => ' ', 4 => ' ', 5 => ' ', 6 => ' ', 7 => ' ', 8 => ' ', 9 => ' ' }
+ board = { 1 => ' ', 2 => ' ', 3 => ' ', 4 => ' ', 5 => ' ', 6 => ' ', 7 => ' ', 8 => ' ', 9 => ' ' }
   begin
     draw_board(board)
     board[player_picks_square(board)] = 'X'
     draw_board(board)
-    break if is_there_a_winner? || all_squares_taken?(board)
+    break if is_there_a_winner?(board) || all_squares_taken?(board)
     board[ai_picks_square(board)] = 'O'
     draw_board(board)
-  end until is_there_a_winner? || all_squares_taken?(board)
+  end until is_there_a_winner?(board) || all_squares_taken?(board)
 end until play_again_check?
+
+
 puts "Thanks for playing"
+
+
+
+
