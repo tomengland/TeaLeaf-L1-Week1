@@ -28,7 +28,7 @@ def player_picks_square board
   begin
     puts 'Pick a square (1 - 9):'
     position = gets.chomp
-  end while board[position.to_i] == 'X' || board[position.to_i] == 'O' || !board.has_key?(position.to_i)
+  end until board[position.to_i] != 'X' && board[position.to_i] != 'O' && board.has_key?(position.to_i)
   position.to_i
 end
 
