@@ -1,20 +1,3 @@
-#1 Come up with specifications/requirements. it'll determine the scope. 
-#2. Application Logic. 
-#3. Translation of those steps into code.
-#4. run code to verify logic. 
-#loop
-#steps
-#1. draw board
-# begin...
-#2. player 1 picks empty square - method
-# check for win - method
-#3. AI picks empty square. - method
-# check for win - 
-#4. end while there_are_empty_spaces.
-#5 show winner if there is a winner, ask do you want to play again
-#6 else no winner it's tie, ask do you want to play again. 
-#loop until they do not want to play again. 
-
 def draw_board(board)
   system "clear" or system "cls"
   puts " #{board[1]} | #{board[2]} | #{board[3]} "
@@ -33,20 +16,64 @@ def player_picks_square(board)
 end
 
 def is_there_a_winner?(board)
-  # check if there is a winner
-  # 1 2 3
-  # 4 5 6
-  # 7 8 9 
-  # winning combos
-  # 123
-  # 159
-  # 147
-  # 258
-  # 369
-  # 357
-  # 456
-  # 789
-
+  case
+  when (board[1] == 'X' && board[2] == 'X' && board[3] == 'X') || (board[1] == 'O' && board[2] == 'O' && board[3] == 'O')
+    if (board[1] == 'X' && board[2] == 'X' && board[3] == 'X')
+      puts "You Won!"
+    else
+      puts "Computer Won!"
+    end
+    true
+  when (board[1] == 'X' && board[5] == 'X' && board[9] == 'X') || (board[1] == 'O' && board[5] == 'O' && board[9] == 'O')
+    if (board[1] == 'X' && board[5] == 'X' && board[9] == 'X')
+      puts "You Won!"
+    else
+      puts "Computer Won!"
+    end
+    true
+  when (board[1] == 'X' && board[4] == 'X' && board[7] == 'X') || (board[1] == 'O' && board[4] == 'O' && board[7] == 'O')
+    if (board[1] == 'X' && board[4] == 'X' && board[7] == 'X')
+      puts "You Won!"
+    else
+      puts "Computer Won!"
+    end
+    true
+  when (board[2] == 'X' && board[5] == 'X' && board[8] == 'X') || (board[2] == 'O' && board[5] == 'O' && board[8] == 'O')
+    if (board[2] == 'X' && board[5] == 'X' && board[8] == 'X')
+      puts "You Won!"
+    else
+      puts "Computer Won!"
+    end
+    true
+  when (board[3] == 'X' && board[6] == 'X' && board[9] == 'X') || (board[3] == 'O' && board[6] == 'O' && board[9] == 'O')
+    if (board[3] == 'X' && board[6] == 'X' && board[9] == 'X')
+      puts "You Won!"
+    else
+      puts "Computer Won!"
+    end
+    true
+  when (board[3] == 'X' && board[5] == 'X' && board[7] == 'X') || (board[3] == 'O' && board[5] == 'O' && board[7] == 'O')
+    if (board[3] == 'X' && board[5] == 'X' && board[7] == 'X')
+      puts "You Won!"
+    else
+      puts "Computer Won!"
+    end
+    true
+  when (board[4] == 'X' && board[5] == 'X' && board[6] == 'X') || (board[4] == 'O' && board[5] == 'O' && board[6] == 'O')
+    if (board[4] == 'X' && board[5] == 'X' && board[6] == 'X')
+      puts "You Won!"
+    else
+      puts "Computer Won!"
+    end
+    true
+  when (board[7] == 'X' && board[8] == 'X' && board[9] == 'X') || (board[7] == 'O' && board[8] == 'O' && board[9] == 'O')
+    if (board[7] == 'X' && board[8] == 'X' && board[9] == 'X')
+      puts "You Won!"
+    else
+      puts "Computer Won!"
+    end
+    true
+  end     
 end
 
 def ai_picks_square(board)
@@ -58,7 +85,6 @@ def ai_picks_square(board)
 end
 
 def all_squares_taken?(board)
-  #all squares taken?
   !board.has_value?(' ')
 end
 
