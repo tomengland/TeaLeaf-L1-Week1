@@ -12,27 +12,10 @@
   # add double down.
 ##---features - 1.7 (april)
   # add surrender 
-
-##---Psuedo Code 1.0
-# ask for name
-# deal 2 cards to player, this should also subtract from available cards. (1 deck). 
-# deal 2 cards to dealer, showing one card.
-# repeat hit/stay?
-# hit: add count to player_count.
-# if count > 21 puts you bust you lose, break. 
-# break if stay
-# dealer hit while count < 17
-# if computer_count > 21, puts dealer bust, you win, break
-# show all cards, 
-# if computer_count > player_count 
-#   you lose
-# elsif computer_count == player_count
-#   push
-# else
-#   you win. 
-# end
-# play_again? y/n. 
 require 'pry'
+
+#fix #1, add "Ace" handling
+#fix #2, "refactor methods"
 
 def remove_cards_from_decks(hand, decks, initial_deal)
   if initial_deal == true
@@ -44,6 +27,7 @@ def remove_cards_from_decks(hand, decks, initial_deal)
   end
 decks.reject! {|k, v| v == []}
 end
+
 def total(who, player_hand, computer_hand, points)
   if who == "player"
     player_total = 0
@@ -59,6 +43,7 @@ def total(who, player_hand, computer_hand, points)
     computer_total
   end
 end
+
 def display_hands(who, hand)
   if who == "player"
     string = "  "
@@ -74,7 +59,7 @@ def display_hands(who, hand)
     string
   end
 end
-#fix #2, refactor display of cards. 
+
 def draw_game_board(name, player_hand, computer_hand, decks, hide_dealer_card)
   system "clear" or system "cls"
   puts "       DEALER         "
@@ -95,6 +80,7 @@ def draw_game_board(name, player_hand, computer_hand, decks, hide_dealer_card)
   puts "----------------------"
   puts "       #{name}        "
 end
+
 def check_for_outcomes(name, player_total, computer_total)
   if player_total > 21
     puts "You bust, sorry #{name}, you lose!"
@@ -108,6 +94,7 @@ def check_for_outcomes(name, player_total, computer_total)
     puts "player wins"
   end
 end 
+
 def play_again_check?
   begin
     puts "Play again? (Y/N)"
@@ -119,7 +106,6 @@ def play_again_check?
     false
   end
 end
-
 
 begin
   puts "What is your name?"
@@ -142,26 +128,26 @@ begin
       player_response = gets.chomp.upcase!
     end until player_response == "H" || player_response == "S"
     if player_response == "H" 
-      puts "#{name} hits"
+      puts "---#{name} hits---"
       player_hand.push(decks.keys.sample)
       remove_cards_from_decks(player_hand, decks, false)
       draw_game_board(name, player_hand, computer_hand, decks, true)
       break if total("player", player_hand, computer_hand, POINTS) > 21
     else 
-      puts "#{name} stands"
+      puts "---#{name} stands---"
     end
   end until player_response == "S"
   if total("player", player_hand, computer_hand, POINTS) <= 21
     draw_game_board(name, player_hand, computer_hand, decks, false)
     while total("computer", player_hand, computer_hand, POINTS) < 17
-      puts "Dealer hits"
+      puts "---Dealer hits---"
       computer_hand.push(decks.keys.sample)
       remove_cards_from_decks(computer_hand, decks, false)
       draw_game_board(name, player_hand, computer_hand, decks, false)
     end
   end
   if total("computer", player_hand, computer_hand, POINTS) >= 17 && total("computer", player_hand, computer_hand, POINTS) <= 21
-    puts "Dealer Stands"
+    puts "---Dealer stands---"
     check_for_outcomes(name, total("player", player_hand, computer_hand, POINTS), total("computer", player_hand, computer_hand, POINTS))
   else
     check_for_outcomes(name, total("player", player_hand, computer_hand, POINTS), total("computer", player_hand, computer_hand, POINTS))
