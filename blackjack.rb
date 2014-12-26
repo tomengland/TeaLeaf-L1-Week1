@@ -1,6 +1,6 @@
 # blackjack
 ##---features - 1.0
-  # 1 deck
+  # 2 decks
   # hit, stay, push
 ##---features - 1.4 (Jan)
   # shuffle when shoe is below 2 Decks.
@@ -99,7 +99,20 @@ begin
 end while name.empty?
 
 begin
-  decks = { "ACE" => [10, 10, 10, 10], "2" => [2, 2, 2, 2], "3" => [3, 3, 3, 3], "4" => [4, 4, 4, 4], "5" => [5, 5, 5, 5], "6" => [6, 6, 6, 6], "7" => [7, 7, 7, 7], "8" => [8, 8, 8, 8], "9" => [9, 9, 9, 9], "JACK" => [10, 10, 10, 10], "QUEEN" => [10, 10, 10, 10], "KING" => [10, 10, 10, 10] }
+  decks = { "ACE" => [], "2" => [], "3" => [], "4" => [], "5" => [], "6" => [], "7" => [], "8" => [], "9" => [], "JACK" => [], "QUEEN" => [], "KING" => [] }
+  decks.each_key do |k|
+    deck_cards = []
+    if k == "ACE" || k == "JACK" || k == "QUEEN" || k == "KING"
+      8.times do
+        deck_cards << 10
+      end
+    else 
+      8.times do
+        deck_cards << k.to_i
+      end
+    end
+    decks[k] = deck_cards
+  end
   player_points = { "ACE" => 10, "2" => 2, "3" => 3, "4" => 4, "5" => 5, "6" => 6, "7" => 7, "8" => 8, "9" => 9, "JACK" => 10, "QUEEN" => 10, "KING" => 10 }
   computer_points = { "ACE" => 10, "2" => 2, "3" => 3, "4" => 4, "5" => 5, "6" => 6, "7" => 7, "8" => 8, "9" => 9, "JACK" => 10, "QUEEN" => 10, "KING" => 10 }
   player_hand = []
