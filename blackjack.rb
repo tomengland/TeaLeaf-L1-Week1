@@ -3,8 +3,7 @@
   # 2 decks
   # hit, stay, push
 ##---features - 1.4 (Jan)
-  # shuffle when shoe is below 2 Decks.
-  # 6 decks.
+  # shuffle when shoe is below 52 cards, make it automatic. 
   # ability to see running count to practice (Hi-Lo)
 ##---features - 1.5 (Feb)
   # ability to bet.
@@ -93,12 +92,7 @@ def play_again_check?
   end
 end
 
-begin
-  puts "What is your name?"
-  name = gets.chomp.capitalize
-end while name.empty?
-
-begin
+def shuffle_deck
   decks = { "ACE" => [], "2" => [], "3" => [], "4" => [], "5" => [], "6" => [], "7" => [], "8" => [], "9" => [], "JACK" => [], "QUEEN" => [], "KING" => [] }
   decks.each_key do |k|
     deck_cards = []
@@ -113,6 +107,16 @@ begin
     end
     decks[k] = deck_cards
   end
+  decks
+end
+
+begin
+  puts "What is your name?"
+  name = gets.chomp.capitalize
+end while name.empty?
+
+begin
+  decks = shuffle_deck
   player_points = { "ACE" => 10, "2" => 2, "3" => 3, "4" => 4, "5" => 5, "6" => 6, "7" => 7, "8" => 8, "9" => 9, "JACK" => 10, "QUEEN" => 10, "KING" => 10 }
   computer_points = { "ACE" => 10, "2" => 2, "3" => 3, "4" => 4, "5" => 5, "6" => 6, "7" => 7, "8" => 8, "9" => 9, "JACK" => 10, "QUEEN" => 10, "KING" => 10 }
   player_hand = []
@@ -154,7 +158,7 @@ begin
       end
     end
   end
-  if total(computer_hand, computer_points) >= 17 && total(computer_hand, computer_points) <= 21
+  if total(computer_hand, computer_points) >= 17 && total(computer_hand, computer_points) <= 21 && total(player_hand, player_points) <= 21
     puts "---Dealer stands---"
     check_for_outcomes(name, total(player_hand, player_points), total(computer_hand, computer_points))
   else
