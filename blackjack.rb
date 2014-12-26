@@ -12,7 +12,7 @@
 ##---features - 1.7 (april)
   # add surrender 
 def remove_cards_from_decks(hand, decks, initial_deal)
-  if initial_deal == true
+  if initial_deal
     hand.each do |card|
       decks[card].pop
     end
