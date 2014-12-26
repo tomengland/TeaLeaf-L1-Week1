@@ -1,16 +1,7 @@
-x = 4
-
-loop do
-  x = 'hey there'
-  break
+hash = {"A" => 10}
+puts hash
+def change_hash(hash)
+  hash["A"] = 1
 end
-
-puts x
-
-
-x = 'hi!'
-def my_method(x)
-  puts x
-end
-
-my_method(x)
+change_hash(hash)
+puts hash

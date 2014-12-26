@@ -12,11 +12,6 @@
   # add double down.
 ##---features - 1.7 (april)
   # add surrender 
-require 'pry'
-
-#fix #1, add "Ace" handling
-#fix #2, "refactor methods"
-
 def remove_cards_from_decks(hand, decks, initial_deal)
   if initial_deal == true
     hand.each do |card|
@@ -28,39 +23,23 @@ def remove_cards_from_decks(hand, decks, initial_deal)
 decks.reject! {|k, v| v == []}
 end
 
-def total(who, player_hand, computer_hand, points)
-  if who == "player"
-    player_total = 0
-    player_hand.each do |card|
-      player_total += points[card]
-    end
-    player_total
-  else
-    computer_total = 0
-    computer_hand.each do |card|
-      computer_total += points[card]
-    end
-    computer_total
+def total(hand, points)
+  total = 0
+  hand.each do |card|
+    total += points[card]
   end
+  total
 end
 
-def display_hands(who, hand)
-  if who == "player"
-    string = "  "
-    hand.each do |card|
-      string += "#{card}, "
-    end
-    string
-  else
-    string = "  "
-    hand.each do |card|
-      string += "#{card}, "
-    end
-    string
+def display_hands(hand)
+  string = "  "
+  hand.each do |card|
+    string += "#{card}, "
   end
+  string
 end
 
-def draw_game_board(name, player_hand, computer_hand, decks, hide_dealer_card)
+def draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, hide_dealer_card)
   system "clear" or system "cls"
   puts "       DEALER         "
   puts "----------------------"
@@ -68,14 +47,14 @@ def draw_game_board(name, player_hand, computer_hand, decks, hide_dealer_card)
     puts "|                    |" 
     puts "  #{computer_hand[0]}   and   HIDDEN "
   else 
-    puts "|                    | Computer Total: [#{total("computer", player_hand, computer_hand, POINTS)}]" 
-    puts display_hands("", computer_hand)
+    puts "|                    | Computer Total: [#{total(computer_hand, computer_points)}]" 
+    puts display_hands(computer_hand)
   end
   puts "|                    |"
   puts "----------------------"
   puts "----------------------"
-  puts "|                    | #{name} Total: [#{total("player", player_hand, computer_hand, POINTS)}]"
-  puts display_hands("player", player_hand)
+  puts "|                    | #{name} Total: [#{total(player_hand, player_points)}]"
+  puts display_hands(player_hand)
   puts "|                    |"
   puts "----------------------"
   puts "       #{name}        "
@@ -87,13 +66,20 @@ def check_for_outcomes(name, player_total, computer_total)
   elsif computer_total > 21
     puts "#{name} wins, Dealer busted!"
   elsif computer_total > player_total
-    puts "dealer wins"
+    puts "Dealer wins, dealer had more points than #{name}"
   elsif computer_total == player_total
-    puts "push"
+    puts "Push, dealer and #{name} have the same amount of points."
   else 
-    puts "player wins"
+    puts "#{name} wins, you had more points than dealer!"
   end
-end 
+end
+
+def check_for_ace(hand, points)
+  if hand.include?("ACE")
+    puts "Moving ACE from 10 to 1"
+    points["ACE"] = 1
+  end
+end
 
 def play_again_check?
   begin
@@ -109,19 +95,20 @@ end
 
 begin
   puts "What is your name?"
-  name = gets.chomp.capitalize!
+  name = gets.chomp.capitalize
 end while name.empty?
 
-POINTS = { "A" => 1, "2" => 2, "3" => 3, "4" => 4, "5" => 5, "6" => 6, "7" => 7, "8" => 8, "9" => 9, "JACK" => 10, "QUEEN" => 10, "KING" => 10 }
 begin
-  decks = { "A" => [1, 1, 1, 1], "2" => [2, 2, 2, 2], "3" => [3, 3, 3, 3], "4" => [4, 4, 4, 4], "5" => [5, 5, 5, 5], "6" => [6, 6, 6, 6], "7" => [7, 7, 7, 7], "8" => [8, 8, 8, 8], "9" => [9, 9, 9, 9], "JACK" => [10, 10, 10, 10], "QUEEN" => [10, 10, 10, 10], "KING" => [10, 10, 10, 10] }
+  decks = { "ACE" => [10, 10, 10, 10], "2" => [2, 2, 2, 2], "3" => [3, 3, 3, 3], "4" => [4, 4, 4, 4], "5" => [5, 5, 5, 5], "6" => [6, 6, 6, 6], "7" => [7, 7, 7, 7], "8" => [8, 8, 8, 8], "9" => [9, 9, 9, 9], "JACK" => [10, 10, 10, 10], "QUEEN" => [10, 10, 10, 10], "KING" => [10, 10, 10, 10] }
+  player_points = { "ACE" => 10, "2" => 2, "3" => 3, "4" => 4, "5" => 5, "6" => 6, "7" => 7, "8" => 8, "9" => 9, "JACK" => 10, "QUEEN" => 10, "KING" => 10 }
+  computer_points = { "ACE" => 10, "2" => 2, "3" => 3, "4" => 4, "5" => 5, "6" => 6, "7" => 7, "8" => 8, "9" => 9, "JACK" => 10, "QUEEN" => 10, "KING" => 10 }
   player_hand = []
   computer_hand = []
   player_hand = decks.keys.sample 2
   remove_cards_from_decks(player_hand, decks, true)
   computer_hand = decks.keys.sample 2
   remove_cards_from_decks(computer_hand, decks, true)
-  draw_game_board(name, player_hand, computer_hand, decks, true)
+  draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, true)
   begin
     begin
       puts "Hit (H) or Stay (S)"
@@ -131,33 +118,37 @@ begin
       puts "---#{name} hits---"
       player_hand.push(decks.keys.sample)
       remove_cards_from_decks(player_hand, decks, false)
-      draw_game_board(name, player_hand, computer_hand, decks, true)
-      break if total("player", player_hand, computer_hand, POINTS) > 21
+      draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, true)
+      if total(player_hand, player_points) > 21
+        check_for_ace(player_hand, player_points) 
+        draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, true)
+      end
+      break if total(player_hand, player_points) > 21
     else 
       puts "---#{name} stands---"
     end
   end until player_response == "S"
-  if total("player", player_hand, computer_hand, POINTS) <= 21
-    draw_game_board(name, player_hand, computer_hand, decks, false)
-    while total("computer", player_hand, computer_hand, POINTS) < 17
+  if total(player_hand, player_points) <= 21
+    draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, false)
+    while total(computer_hand, computer_points) < 17
       puts "---Dealer hits---"
       computer_hand.push(decks.keys.sample)
       remove_cards_from_decks(computer_hand, decks, false)
-      draw_game_board(name, player_hand, computer_hand, decks, false)
+      draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, false)
+      if total(computer_hand, computer_points) > 21
+        check_for_ace(computer_hand, computer_points) 
+        draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, false)
+      end
     end
   end
-  if total("computer", player_hand, computer_hand, POINTS) >= 17 && total("computer", player_hand, computer_hand, POINTS) <= 21
+  if total(computer_hand, computer_points) >= 17 && total(computer_hand, computer_points) <= 21
     puts "---Dealer stands---"
-    check_for_outcomes(name, total("player", player_hand, computer_hand, POINTS), total("computer", player_hand, computer_hand, POINTS))
+    check_for_outcomes(name, total(player_hand, player_points), total(computer_hand, computer_points))
   else
-    check_for_outcomes(name, total("player", player_hand, computer_hand, POINTS), total("computer", player_hand, computer_hand, POINTS))
+    check_for_outcomes(name, total(player_hand, player_points), total(computer_hand, computer_points))
   end    
 end while play_again_check?
 
-
-    
-
-    
 
 
 
