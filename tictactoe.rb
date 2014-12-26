@@ -94,9 +94,9 @@ def play_again_check?
     answer = gets.chomp.downcase
   end until answer == 'y' || answer == 'n'
   if answer == 'y'
-    false
-  else 
     true
+  else 
+    false
   end
 end
 ## GAME LOGIC BEGIN
@@ -110,7 +110,7 @@ begin
     board[ai_picks_square(board)] = 'O'
     draw_board(board)
   end until is_there_a_winner?(board) || all_squares_taken?(board)
-end until play_again_check?
+end while play_again_check?
 
 
 puts "Thanks for playing"
