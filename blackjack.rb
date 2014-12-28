@@ -38,7 +38,7 @@ def display_hands(hand)
   string
 end
 
-def draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, hide_dealer_card)
+def draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, win_loss_total, hide_dealer_card)
   system "clear" or system "cls"
   puts "       DEALER         "
   puts "----------------------"
@@ -54,7 +54,7 @@ def draw_game_board(name, player_hand, computer_hand, player_points, computer_po
   puts "----------------------"
   puts "|                    | #{name} Total: [#{total(player_hand, player_points)}]"
   puts display_hands(player_hand)
-  puts "|                    |"
+  puts "|                    | Win/Loss: #{win_loss_total[:Win]} / #{win_loss_total[:Loss]}"
   puts "----------------------"
   puts "       #{name}        "
 end
@@ -62,14 +62,18 @@ end
 def check_for_outcomes(name, player_total, computer_total)
   if player_total > 21
     puts "You bust, sorry #{name}, you lose!"
+    loss = true
   elsif computer_total > 21
     puts "#{name} wins, Dealer busted!"
+    loss = false
   elsif computer_total > player_total
     puts "Dealer wins, dealer had more points than #{name}"
+    loss = true
   elsif computer_total == player_total
     puts "Push, dealer and #{name} have the same amount of points."
   else 
     puts "#{name} wins, you had more points than dealer!"
+    loss = false
   end
 end
 
@@ -94,9 +98,13 @@ def shuffle_deck
             "JACK" => [], "QUEEN" => [], "KING" => [] }
   decks.each_key do |key|
     deck_cards = []
-    if key == "ACE" || key == "JACK" || key == "QUEEN" || key == "KING"
+    if key == "JACK" || key == "QUEEN" || key == "KING"
       8.times do
         deck_cards << 10
+      end
+    elsif key == "ACE"
+      8.times do
+        deck_cards << 11
       end
     else 
       8.times do
@@ -113,12 +121,13 @@ begin
   name = gets.chomp.capitalize
 end while name.empty?
 
+win_loss_total = { Win: 0, Loss: 0 }
 begin
   decks = shuffle_deck
-  player_points = { "ACE" => 10, "2" => 2, "3" => 3,
+  player_points = { "ACE" => 11, "2" => 2, "3" => 3,
                     "4" => 4, "5" => 5, "6" => 6, "7" => 7, "8" => 8, "9" => 9, 
                     "JACK" => 10, "QUEEN" => 10, "KING" => 10 }
-  computer_points = { "ACE" => 10, "2" => 2, "3" => 3, 
+  computer_points = { "ACE" => 11, "2" => 2, "3" => 3, 
                       "4" => 4, "5" => 5, "6" => 6, "7" => 7, "8" => 8, "9" => 9, 
                       "JACK" => 10, "QUEEN" => 10, "KING" => 10 }
   player_hand = []
@@ -127,7 +136,7 @@ begin
   remove_cards_from_decks(player_hand, decks, true)
   computer_hand = decks.keys.sample 2
   remove_cards_from_decks(computer_hand, decks, true)
-  draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, true)
+  draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, win_loss_total, true)
   begin
     begin
       puts "Hit (H) or Stay (S)"
@@ -137,10 +146,10 @@ begin
       puts "---#{name} hits---"
       player_hand.push(decks.keys.sample)
       remove_cards_from_decks(player_hand, decks, false)
-      draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, true)
+      draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, win_loss_total, true)
       if total(player_hand, player_points) > 21
         check_for_ace(player_hand, player_points) 
-        draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, true)
+        draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, win_loss_total, true)
       end
       break if total(player_hand, player_points) > 21
     else 
@@ -148,23 +157,23 @@ begin
     end
   end until player_response == "S"
   if total(player_hand, player_points) <= 21
-    draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, false)
+    draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, win_loss_total, false)
     while total(computer_hand, computer_points) < 17
       puts "---Dealer hits---"
       computer_hand.push(decks.keys.sample)
       remove_cards_from_decks(computer_hand, decks, false)
-      draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, false)
+      draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, win_loss_total, false)
       if total(computer_hand, computer_points) > 21
         check_for_ace(computer_hand, computer_points) 
-        draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, false)
+        draw_game_board(name, player_hand, computer_hand, player_points, computer_points, decks, win_loss_total, false)
       end
     end
   end
   if total(computer_hand, computer_points) >= 17 && total(computer_hand, computer_points) <= 21 && total(player_hand, player_points) <= 21
     puts "---Dealer stands---"
-    check_for_outcomes(name, total(player_hand, player_points), total(computer_hand, computer_points))
+    check_for_outcomes(name, total(player_hand, player_points), total(computer_hand, computer_points)) ? win_loss_total[:Loss] += 1 : win_loss_total[:Win] += 1
   else
-    check_for_outcomes(name, total(player_hand, player_points), total(computer_hand, computer_points))
+    check_for_outcomes(name, total(player_hand, player_points), total(computer_hand, computer_points)) ? win_loss_total[:Loss] += 1 : win_loss_total[:Win] += 1
   end    
 end while play_again_check?
 
