@@ -4,7 +4,7 @@
   # hit, stay, push
 ##---features - 1.4 (Jan)
   # shuffle when shoe is below 52 cards, make it automatic. 
-  # ability to see running count to practice (Hi-Lo)
+  # ability to see running count to practice (Hi-Lo)mom
 ##---features - 1.5 (Feb)
   # ability to bet.
 ##---features - 1.6 (March)
@@ -19,7 +19,7 @@ def remove_cards_from_decks(hand, decks, initial_deal)
   else 
     decks[hand.last].pop
   end
-decks.reject! {|k, v| v == []}
+  decks.reject! {|key, v| v == []}
 end
 
 def total(hand, points)
@@ -85,27 +85,25 @@ def play_again_check?
     puts "Play again? (Y/N)"
     answer = gets.chomp.downcase
   end until answer == 'y' || answer == 'n'
-  if answer == 'y'
-    true
-  else 
-    false
-  end
+  answer == 'y'
 end
 
 def shuffle_deck
-  decks = { "ACE" => [], "2" => [], "3" => [], "4" => [], "5" => [], "6" => [], "7" => [], "8" => [], "9" => [], "JACK" => [], "QUEEN" => [], "KING" => [] }
-  decks.each_key do |k|
+  decks = { "ACE" => [], "2" => [], "3" => [], "4" => [],
+            "5" => [], "6" => [], "7" => [], "8" => [], "9" => [], 
+            "JACK" => [], "QUEEN" => [], "KING" => [] }
+  decks.each_key do |key|
     deck_cards = []
-    if k == "ACE" || k == "JACK" || k == "QUEEN" || k == "KING"
+    if key == "ACE" || key == "JACK" || key == "QUEEN" || key == "KING"
       8.times do
         deck_cards << 10
       end
     else 
       8.times do
-        deck_cards << k.to_i
+        deck_cards << key.to_i
       end
     end
-    decks[k] = deck_cards
+    decks[key] = deck_cards
   end
   decks
 end
@@ -117,8 +115,12 @@ end while name.empty?
 
 begin
   decks = shuffle_deck
-  player_points = { "ACE" => 10, "2" => 2, "3" => 3, "4" => 4, "5" => 5, "6" => 6, "7" => 7, "8" => 8, "9" => 9, "JACK" => 10, "QUEEN" => 10, "KING" => 10 }
-  computer_points = { "ACE" => 10, "2" => 2, "3" => 3, "4" => 4, "5" => 5, "6" => 6, "7" => 7, "8" => 8, "9" => 9, "JACK" => 10, "QUEEN" => 10, "KING" => 10 }
+  player_points = { "ACE" => 10, "2" => 2, "3" => 3,
+                    "4" => 4, "5" => 5, "6" => 6, "7" => 7, "8" => 8, "9" => 9, 
+                    "JACK" => 10, "QUEEN" => 10, "KING" => 10 }
+  computer_points = { "ACE" => 10, "2" => 2, "3" => 3, 
+                      "4" => 4, "5" => 5, "6" => 6, "7" => 7, "8" => 8, "9" => 9, 
+                      "JACK" => 10, "QUEEN" => 10, "KING" => 10 }
   player_hand = []
   computer_hand = []
   player_hand = decks.keys.sample 2
